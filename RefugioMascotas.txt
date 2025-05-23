@@ -1,0 +1,250 @@
+CREATE DATABASE IF NOT EXISTS RefugioMascotas;
+USE RefugioMascotas;
+
+CREATE TABLE Especies (
+    ID_Especie INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre_Especie VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Razas (
+    ID_Raza INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre_Raza VARCHAR(50) NOT NULL,
+    ID_Especie INT,
+    FOREIGN KEY (ID_Especie) REFERENCES Especies(ID_Especie)
+);
+
+CREATE TABLE Estados_Salud (
+    ID_Estado_Salud INT AUTO_INCREMENT PRIMARY KEY,
+    Descripcion VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Estados_Adopcion (
+    ID_Estado_Adopcion INT AUTO_INCREMENT PRIMARY KEY,
+    Descripcion VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Cargos (
+    ID_Cargo INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre_Cargo VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Mascotas (
+    ID_Mascota INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(50),
+    Edad INT,
+    ID_Raza INT,
+    ID_Estado_Salud INT,
+    ID_Estado_Adopcion INT,
+    Fecha_Ingreso DATE,
+    FOREIGN KEY (ID_Raza) REFERENCES Razas(ID_Raza),
+    FOREIGN KEY (ID_Estado_Salud) REFERENCES Estados_Salud(ID_Estado_Salud),
+    FOREIGN KEY (ID_Estado_Adopcion) REFERENCES Estados_Adopcion(ID_Estado_Adopcion)
+);
+
+CREATE TABLE Adoptantes (
+    ID_Adoptante INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre_Completo VARCHAR(100) NOT NULL,
+    Direccion VARCHAR(255),
+    Telefono VARCHAR(20),
+    Correo VARCHAR(100)
+);
+
+CREATE TABLE Empleados (
+    ID_Empleado INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre_Completo VARCHAR(100) NOT NULL,
+    ID_Cargo INT,
+    Correo VARCHAR(100),
+    FOREIGN KEY (ID_Cargo) REFERENCES Cargos(ID_Cargo)
+);
+
+CREATE TABLE Adopciones (
+    ID_Adopcion INT AUTO_INCREMENT PRIMARY KEY,
+    ID_Mascota INT,
+    ID_Adoptante INT,
+    ID_Empleado INT,
+    Fecha_Adopcion DATE NOT NULL,
+    Observaciones TEXT,
+    FOREIGN KEY (ID_Mascota) REFERENCES Mascotas(ID_Mascota),
+    FOREIGN KEY (ID_Adoptante) REFERENCES Adoptantes(ID_Adoptante),
+    FOREIGN KEY (ID_Empleado) REFERENCES Empleados(ID_Empleado)
+);
+
+CREATE TABLE Controles_PostAdopcion (
+    ID_Control INT AUTO_INCREMENT PRIMARY KEY,
+    ID_Adopcion INT,
+    Fecha_Control DATE NOT NULL,
+    Observaciones TEXT,
+    Estado_Mascota VARCHAR(100),
+    FOREIGN KEY (ID_Adopcion) REFERENCES Adopciones(ID_Adopcion)
+);
+
+INSERT INTO Especies (Nombre_Especie) VALUES 
+('Perro'), ('Gato');
+
+INSERT INTO Razas (Nombre_Raza, ID_Especie) VALUES 
+('Labrador Retriever', 1), ('Bulldog Francés', 1), ('Pastor Alemán', 1), 
+('Beagle', 1), ('Golden Retriever', 1), 
+('Siames', 2), ('Persa', 2), ('Maine Coon', 2), 
+('Bengala', 2), ('Esfinge', 2);
+
+INSERT INTO Estados_Salud (Descripcion) VALUES 
+('Saludable'), ('Enfermo'), ('Discapacidad física');
+
+INSERT INTO Estados_Adopcion (Descripcion) VALUES 
+('Disponible'), ('Reservado'), ('Adoptado'), ('Reingresado al refugio');
+
+INSERT INTO Cargos (Nombre_Cargo) VALUES 
+('Director del Refugio'), ('Veterinario'), ('Asistente Veterinario'), 
+('Encargado de Bienestar Animal'), ('Recepcionista');
+
+INSERT INTO Empleados (Nombre_Completo, ID_Cargo, Correo) VALUES 
+('Luis Cruz', 1, 'luiscruz991lol@gmail.com'),
+('Genesis Canizalez', 5, 'geni_canizalez@gmail.com'),
+('Ana Torres', 3, 'ana_torres@gmail.com'),
+('Paula Ruiz', 4, 'paula_ruiz@gmail.com'),
+('Raúl Méndez', 5, 'raul_mendez@gmail.com');
+
+INSERT INTO Adoptantes (Nombre_Completo, Direccion, Telefono, Correo) VALUES 
+('Juan Pérez', 'Calle Falsa 123', '7555-1234', 'juan.perez@gmail.com'),
+('María López', 'Av. Siempre Viva 742', '8520-5678', 'maria.lopez@gmail.com'),
+('Sofía González', 'Boulevard del Sol 45', '8610-8765', 'sofia.gonzalez@gmail.com'),
+('Miguel Ramos', 'Camino Real 100', '7860-4321', 'miguel.ramos@gmail.com'),
+('Carla Suárez', 'Sendero Verde 88', '7950-2468', 'carla.suarez@gmail.com'),
+('Andrés Herrera', 'Av. Central 101', '7145-1357', 'andres.herrera@gmail.com'),
+('Lucía Mendoza', 'Calle Azul 222', '7463-2468', 'lucia.mendoza@gmail.com'),
+('Javier Peña', 'Camino del Bosque 19', '7894-3698', 'javier.pena@gmail.com'),
+('Elena Castro', 'Pasaje Las Rosas 5', '7002-4789', 'elena.castro@gmail.com'),
+('Diego Fernández', 'Ruta 9 Km 3', '7141-5896', 'diego.fernandez@gmail.com');
+
+INSERT INTO Mascotas (Nombre, Edad, ID_Raza, ID_Estado_Salud, ID_Estado_Adopcion, Fecha_Ingreso) VALUES
+('Max', 3, 1, 1, 1, '2024-05-01'), ('Luna', 2, 2, 1, 1, '2024-04-15'), 
+('Rocky', 5, 3, 2, 1, '2024-03-20'), ('Bella', 1, 4, 1, 1, '2024-05-10'),
+('Toby', 4, 5, 3, 1, '2024-02-28'), ('Simba', 2, 6, 1, 1, '2024-04-12'),
+('Mía', 3, 7, 1, 1, '2024-05-05'), ('Nala', 2, 8, 1, 1, '2024-04-25'),
+('Coco', 6, 9, 1, 1, '2024-01-30'), ('Pelusa', 8, 10, 1, 1, '2024-03-10'),
+('Zeus', 2, 1, 1, 1, '2025-05-11'), ('Lola', 1, 2, 1, 2, '2025-05-12'),
+('Copito', 5, 8, 1, 1, '2025-03-01'), ('Milo', 3, 4, 1, 2, '2025-05-14'),
+('Chispa', 2, 1, 2, 2, '2025-01-05'), ('Manchas', 3, 3, 1, 2, '2025-02-10'),
+('Jerry', 2, 7, 1, 2, '2025-05-17'), ('Sol', 1, 6, 1, 1, '2025-02-18'),
+('Felix', 4, 9, 3, 2, '2025-05-19'), ('Garfield', 5, 10, 1, 1, '2025-05-20');
+
+INSERT INTO Adopciones (ID_Mascota, ID_Adoptante, ID_Empleado, Fecha_Adopcion, Observaciones) VALUES
+(1, 1, 1, '2024-05-10', 'Entregada con documentos'),
+(2, 2, 2, '2024-05-11', 'Adopción rápida'),
+(3, 3, 3, '2024-05-12', 'Seguir control médico'),
+(4, 4, 4, '2024-05-13', 'Se entregó en buen estado'),
+(5, 5, 5, '2024-05-14', 'Adopción con seguimiento psicológico');
+
+INSERT INTO Controles_PostAdopcion (ID_Adopcion, Fecha_Control, Observaciones, Estado_Mascota) VALUES
+(1, '2024-06-10', 'Bien adaptado', 'Activa y saludable'),
+(2, '2024-06-11', 'Buen estado físico', 'Saludable'),
+(3, '2024-06-12', 'Requiere medicación continua', 'Condición estable'),
+(4, '2024-06-13', 'Adaptación exitosa', 'Juguetona y sociable'),
+(5, '2024-06-14', 'Ligero estrés por adaptación', 'En observación');
+
+
+--Consulta a)Listar mascotas disponibles filtradas por especie, edad o estado de salud--
+SELECT 
+    M.ID_Mascota,
+    M.Nombre AS Nombre_Mascota,
+    M.Edad,
+    E.Nombre_Especie,
+    R.Nombre_Raza,
+    S.Descripcion AS Estado_Salud,
+    A.Descripcion AS Estado_Adopcion
+FROM Mascotas M
+JOIN Razas R ON M.ID_Raza = R.ID_Raza
+JOIN Especies E ON R.ID_Especie = E.ID_Especie
+JOIN Estados_Salud S ON M.ID_Estado_Salud = S.ID_Estado_Salud
+JOIN Estados_Adopcion A ON M.ID_Estado_Adopcion = A.ID_Estado_Adopcion
+WHERE M.ID_Estado_Salud = 1
+ORDER BY M.ID_Mascota ASC;
+
+
+--Consulta b)Mostrar historial de adopciones por adoptante--
+SELECT 
+    Ado.ID_Adopcion,
+    Adop.Nombre_Completo AS Nombre_Adoptante,
+    M.Nombre AS Nombre_Mascota,
+    M.Edad,
+    R.Nombre_Raza,
+    E.Nombre_Especie,
+    Ado.Fecha_Adopcion,
+    Emp.Nombre_Completo AS Empleado_Responsable,
+    Ado.Observaciones
+FROM Adopciones Ado
+JOIN Adoptantes Adop ON Ado.ID_Adoptante = Adop.ID_Adoptante
+JOIN Mascotas M ON Ado.ID_Mascota = M.ID_Mascota
+JOIN Razas R ON M.ID_Raza = R.ID_Raza
+JOIN Especies E ON R.ID_Especie = E.ID_Especie
+JOIN Empleados Emp ON Ado.ID_Empleado = Emp.ID_Empleado
+WHERE Adop.ID_Adoptante = 3
+ORDER BY Ado.Fecha_Adopcion DESC;
+
+
+--Consulta c)Consultar seguimientos post-adopción realizados por empleado o por mascota--
+SELECT 
+    CPA.ID_Control,
+    CPA.Fecha_Control,
+    CPA.Observaciones,
+    CPA.Estado_Mascota,
+    M.Nombre AS Nombre_Mascota,
+    Adop.Nombre_Completo AS Nombre_Adoptante,
+    Emp.Nombre_Completo AS Empleado_Responsable
+FROM Controles_PostAdopcion CPA
+JOIN Adopciones Ado ON CPA.ID_Adopcion = Ado.ID_Adopcion
+JOIN Mascotas M ON Ado.ID_Mascota = M.ID_Mascota
+JOIN Adoptantes Adop ON Ado.ID_Adoptante = Adop.ID_Adoptante
+JOIN Empleados Emp ON Ado.ID_Empleado = Emp.ID_Empleado
+WHERE Emp.ID_Empleado = 1
+ORDER BY CPA.Fecha_Control DESC;
+
+
+--VISTAS--
+CREATE VIEW Adopciones_Detalles AS
+SELECT 
+    Ado.ID_Adopcion,
+    Adop.Nombre_Completo AS Nombre_Adoptante,
+    M.Nombre AS Nombre_Mascota,
+    M.Edad,
+    E.Nombre_Especie,
+    R.Nombre_Raza,
+    Ado.Fecha_Adopcion
+FROM Adopciones Ado
+JOIN Adoptantes Adop ON Ado.ID_Adoptante = Adop.ID_Adoptante
+JOIN Mascotas M ON Ado.ID_Mascota = M.ID_Mascota
+JOIN Razas R ON M.ID_Raza = R.ID_Raza
+JOIN Especies E ON R.ID_Especie = E.ID_Especie;
+
+SELECT * FROM adopciones_detalles;
+
+--PROCEDIMIENTOS--
+DELIMITER //
+
+CREATE PROCEDURE Registrar_Adopcion (
+    IN p_ID_Mascota INT,
+    IN p_ID_Adoptante INT,
+    IN p_ID_Empleado INT,
+    IN p_Fecha_Adopcion DATE,
+    IN p_Observaciones TEXT
+)
+BEGIN
+    -- Insertar la nueva adopción
+    INSERT INTO Adopciones (
+        ID_Mascota, ID_Adoptante, ID_Empleado, Fecha_Adopcion, Observaciones
+    )
+    VALUES (
+        p_ID_Mascota, p_ID_Adoptante, p_ID_Empleado, p_Fecha_Adopcion, p_Observaciones
+    );
+
+    UPDATE Mascotas
+    SET ID_Estado_Adopcion = 3
+    WHERE ID_Mascota = p_ID_Mascota;
+END //
+
+DELIMITER ;
+
+
+CALL Registrar_Adopcion(
+    6, 2, 3, '2025-05-18', 'Adopción gestionada exitosamente'
+);
